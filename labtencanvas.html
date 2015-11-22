@@ -22,7 +22,7 @@
 			this.x = x;
 			this.y = y;
 			this.type = type;
-			this.r = 5;
+			this.r = 10;
 			this.num = num;
 			this.color = color;
 			this.dx = Math.random() * 30 - 15;
@@ -34,12 +34,40 @@
 			this.x = x;
 			this.y = y;
 			this.type = type;
-			this.width = 10;
-			this.height = 10;
+			this.width = 7;
+			this.height = 7;
 			this.num = num;
 			this.color = color;
 			this.dx = Math.random() * 30 - 15;
 			this.dy = Math.random() * 30 - 15;
+		}
+		
+		else if(num == 3)
+		{
+			this.x = x;
+			this.y = y;
+			this.type = type;
+			this.num = num;
+			this.color = color;
+			this.dx = Math.random() * 30 - 15;
+			this.dy = Math.random() * 30 - 15;
+		}
+		
+		else if(num == 4)
+		{
+			this.x = x;
+			this.y = y;
+			this.type = type;
+			this.num = num;
+			this.side = Math.floor(Math.random() * 10);
+			this.side2 = Math.floor(Math.random() * 20 - 1);
+			this.side3 = Math.floor(Math.random() * 5 - 10);
+			this.side4 = Math.floor(Math.random() * 15 + 5);
+			this.side5 = Math.floor(Math.random() * 9 - 2);
+			this.side6 = Math.floor(Math.random() * 16 + 2);
+			this.color = color;
+			this.dx = Math.random() * 25 - 10;
+			this.dy = Math.random() * 25 - 10;
 		}
 		
 	}
@@ -69,7 +97,9 @@
 		var colors = ["red", "green", "blue", "orange", "purple", "yellow"];
 		var type = 'xor';
 		var color = colors[Math.floor(Math.random() * colors.length)];
-		var num = Math.floor(Math.random() * 2 + 1);
+		var num = Math.floor(Math.random() * 4 + 1);
+		//var num = 4;
+		
 		shapes.push(new Shape(x, y, color, type, num));
 		
 		for(var i = 0; i < shapes.length; i++)
@@ -82,7 +112,9 @@
 	function drawText() {
 		
 		context.font = "30px Jokerman";
-		context.fillText("Move the mouse!", 100, 100);
+		context.fillText("Move the mouse!", 300, 300);
+		context.textAlign = 'center';
+		context.textBaseLine = 'middle';
 	
 	}
 	
@@ -95,18 +127,7 @@
 				found = true;
 			}
 		}
-		//fillBackgroundColor();
-		/*if (!found) {
-			var colors = ["red", "green", "blue", "orange", "purple", "yellow"];
-			var type = 'xor';
-			for(var i = 0; i < 10; i++){
-				var color = colors[Math.floor(Math.random() * colors.length)];
-				circles.push(new Circle(x, y, color, type));
-			}
-		}
-		for (var i = 0; i < circles.length; i++) {
-			drawCircle(circles[i]);
-		}*/
+
 	}
 	function drawShape(shape) {
 	
@@ -125,11 +146,47 @@
 			shape.y += shape.dy;
 		}
 		
-		if(shape.num == 2)
+		else if(shape.num == 2)
 		{
 			context.beginPath();
 			context.globalCompositeOperation = shape.type;
 			context.rect(shape.x, shape.y, shape.width, shape.height);
+			context.fillStyle = shape.color;
+			context.fill();
+			if (shape.x + shape.dx > canvas.width || shape.x + shape.dx < 0)
+				shape.dx = -shape.dx;
+			if (shape.y + shape.dy > canvas.height || shape.y + shape.dy < 0)
+				shape.dy = -shape.dy;
+			shape.x += shape.dx;
+			shape.y += shape.dy;
+		}
+		
+		else if(shape.num == 3)
+		{
+			context.beginPath();
+			context.globalCompositeOperation = shape.type;
+			context.moveTo(shape.x, shape.y);
+			context.lineTo(shape.x + 5, shape.y + 10);
+			context.lineTo(shape.x - 15, shape.y + 15);
+			context.fillStyle = shape.color;
+			context.fill();
+			//context.closePath();
+			if (shape.x + shape.dx > canvas.width || shape.x + shape.dx < 0)
+				shape.dx = -shape.dx;
+			if (shape.y + shape.dy > canvas.height || shape.y + shape.dy < 0)
+				shape.dy = -shape.dy;
+			shape.x += shape.dx;
+			shape.y += shape.dy;
+		}
+		
+		else if(shape.num == 4)
+		{
+			context.beginPath();
+			context.globalCompositeOperation = shape.type;
+			context.moveTo(shape.x, shape.y);
+			context.lineTo(shape.x + shape.side, shape.y + shape.side2);
+			context.lineTo(shape.x - shape.side3, shape.y + shape.side4);
+			context.lineTo(shape.x - shape.side5, shape.y + shape.side6);
 			context.fillStyle = shape.color;
 			context.fill();
 			if (shape.x + shape.dx > canvas.width || shape.x + shape.dx < 0)
@@ -152,8 +209,7 @@
 		
     }
 	function fillBackgroundColor() {
-		//var colors = ["white", "yellow", "blue", "red"];
-		//var bgColor = colors[Math.floor(Math.random() * colors.length)];
+		
 		context.globalCompositeOperation = 'xor';
 		context.fillStyle = 'black';
 		context.fillRect(0, 0, canvas.width, canvas.height);
