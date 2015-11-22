@@ -7,22 +7,41 @@
 
 </style>
 
-<title>Responsive Interactive Canvas</title>
+<title>Interactive Canvas</title>
 <script>
 
 	var canvas;
 	var context;
-	var circles = [];
+	var shapes = [];
 
 	
-	function Circle(x, y, color, type) {
-		this.x = x;
-		this.y = y;
-		this.type = type;
-		this.r = 5;
-		this.color = color;
-		this.dx = Math.random() * 30 - 15;
-		this.dy = Math.random() * 30 - 15;
+	function Shape(x, y, color, type, num) {
+	
+		if(num == 1)
+		{
+			this.x = x;
+			this.y = y;
+			this.type = type;
+			this.r = 5;
+			this.num = num;
+			this.color = color;
+			this.dx = Math.random() * 30 - 15;
+			this.dy = Math.random() * 30 - 15;
+		}
+		
+		else if(num == 2)
+		{
+			this.x = x;
+			this.y = y;
+			this.type = type;
+			this.width = 10;
+			this.height = 10;
+			this.num = num;
+			this.color = color;
+			this.dx = Math.random() * 30 - 15;
+			this.dy = Math.random() * 30 - 15;
+		}
+		
 	}
 	  
     function init() {
@@ -42,6 +61,7 @@
 		
 		}, false);
 		setInterval(resizeCanvas, 30);
+		
     }
 	
 	function getMousePos(x, y) {
@@ -49,22 +69,29 @@
 		var colors = ["red", "green", "blue", "orange", "purple", "yellow"];
 		var type = 'xor';
 		var color = colors[Math.floor(Math.random() * colors.length)];
-		circles.push(new Circle(x, y, color, type));
+		var num = Math.floor(Math.random() * 2 + 1);
+		shapes.push(new Shape(x, y, color, type, num));
 		
-		for(var i = 0; i < circles.length; i++)
+		for(var i = 0; i < shapes.length; i++)
 		{
-			drawCircle(circles[i]);
+			drawShape(shapes[i]);
 		}
 		
 	}
 	
+	function drawText() {
+		
+		context.font = "30px Jokerman";
+		context.fillText("Move the mouse!", 100, 100);
+	
+	}
 	
 	function handleClick(x, y) {
 	    var found = false;
-		for (var i = 0; i < circles.length; i++) {
-			d = Math.sqrt((circles[i].x - x) * (circles[i].x - x) + (circles[i].y - y) * (circles[i].y - y));
+		for (var i = 0; i < shapes.length; i++) {
+			d = Math.sqrt((shapes[i].x - x) * (shapes[i].x - x) + (shapes[i].y - y) * (shapes[i].y - y));
 			if (d <= 130) {
-				circles.splice(i, 1);
+				shapes.splice(i, 1);
 				found = true;
 			}
 		}
@@ -81,27 +108,47 @@
 			drawCircle(circles[i]);
 		}*/
 	}
-	function drawCircle(circle) {
-		context.beginPath();
-		context.globalCompositeOperation = circle.type;
-		context.arc(circle.x, circle.y, circle.r, 0, degreesToRadians(360), true);
-		context.fillStyle = circle.color;
-		context.fill();
-		if (circle.x + circle.dx > canvas.width || circle.x + circle.dx < 0)
-			circle.dx = -circle.dx;
-		if (circle.y + circle.dy > canvas.height || circle.y + circle.dy < 0)
-			circle.dy = -circle.dy;
-		circle.x += circle.dx;
-		circle.y += circle.dy;
+	function drawShape(shape) {
+	
+		if(shape.num == 1)
+		{
+			context.beginPath();
+			context.globalCompositeOperation = shape.type;
+			context.arc(shape.x, shape.y, shape.r, 0, degreesToRadians(360), true);
+			context.fillStyle = shape.color;
+			context.fill();
+			if (shape.x + shape.dx > canvas.width || shape.x + shape.dx < 0)
+				shape.dx = -shape.dx;
+			if (shape.y + shape.dy > canvas.height || shape.y + shape.dy < 0)
+				shape.dy = -shape.dy;
+			shape.x += shape.dx;
+			shape.y += shape.dy;
+		}
+		
+		if(shape.num == 2)
+		{
+			context.beginPath();
+			context.globalCompositeOperation = shape.type;
+			context.rect(shape.x, shape.y, shape.width, shape.height);
+			context.fillStyle = shape.color;
+			context.fill();
+			if (shape.x + shape.dx > canvas.width || shape.x + shape.dx < 0)
+				shape.dx = -shape.dx;
+			if (shape.y + shape.dy > canvas.height || shape.y + shape.dy < 0)
+				shape.dy = -shape.dy;
+			shape.x += shape.dx;
+			shape.y += shape.dy;
+		}
 		
 	}
     function resizeCanvas() {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
 		fillBackgroundColor();
-		for (var i = 0; i < circles.length; i++) {
-			drawCircle(circles[i]);
+		for (var i = 0; i < shapes.length; i++) {
+			drawShape(shapes[i]);
 		}
+		drawText();
 		
     }
 	function fillBackgroundColor() {
