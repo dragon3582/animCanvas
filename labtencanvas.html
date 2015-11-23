@@ -70,12 +70,22 @@
 			this.dy = Math.random() * 25 - 10;
 		}
 		
+		else if(num == 5)
+		{
+			this.x = x;
+			this.y = y;
+			this.type = type;
+			this.num = num;
+			this.color = color;
+			this.dx = Math.random() * 25 - 10;
+			this.dy = Math.random() * 25 - 10;
+		}
 	}
 	  
     function init() {
-        canvas = document.getElementById('canvas');
-        context = canvas.getContext("2d");
 		
+		canvas = document.getElementById('canvas');
+        context = canvas.getContext("2d");
 		
         window.addEventListener('resize', resizeCanvas, false);
         window.addEventListener('orientationchange', resizeCanvas, false);
@@ -97,8 +107,8 @@
 		var colors = ["red", "green", "blue", "orange", "purple", "yellow"];
 		var type = 'xor';
 		var color = colors[Math.floor(Math.random() * colors.length)];
-		var num = Math.floor(Math.random() * 4 + 1);
-		//var num = 4;
+		var num = Math.floor(Math.random() * 5 + 1);
+		//var num = 5;
 		
 		shapes.push(new Shape(x, y, color, type, num));
 		
@@ -109,12 +119,20 @@
 		
 	}
 	
+	var start = 0;
+	
 	function drawText() {
-		
-		context.font = "30px Jokerman";
-		context.fillText("Move the mouse!", 300, 300);
+			
+		context.save();
+		context.font = '30px Jokerman';
+		context.translate(canvas.width/4, canvas.height/2);
+		context.rotate(0.005*start++);
+		if(start > 1256) start = 0;
+		context.fillText('Move the mouse to create, click to dissappear!', 0, 0);
 		context.textAlign = 'center';
 		context.textBaseLine = 'middle';
+		context.restore();
+		
 	
 	}
 	
@@ -170,7 +188,6 @@
 			context.lineTo(shape.x - 15, shape.y + 15);
 			context.fillStyle = shape.color;
 			context.fill();
-			//context.closePath();
 			if (shape.x + shape.dx > canvas.width || shape.x + shape.dx < 0)
 				shape.dx = -shape.dx;
 			if (shape.y + shape.dy > canvas.height || shape.y + shape.dy < 0)
@@ -189,6 +206,24 @@
 			context.lineTo(shape.x - shape.side5, shape.y + shape.side6);
 			context.fillStyle = shape.color;
 			context.fill();
+			if (shape.x + shape.dx > canvas.width || shape.x + shape.dx < 0)
+				shape.dx = -shape.dx;
+			if (shape.y + shape.dy > canvas.height || shape.y + shape.dy < 0)
+				shape.dy = -shape.dy;
+			shape.x += shape.dx;
+			shape.y += shape.dy;
+		}
+		
+		else if(shape.num == 5)
+		{
+			context.beginPath();
+			context.globalCompositeOperation = shape.type;
+			context.moveTo(shape.x, shape.y);
+			context.bezierCurveTo(shape.x, shape.y+20, shape.x+40, shape.y+20, shape.x+40, shape.y);
+			context.strokeStyle = shape.color;
+			context.lineWidth = 5;
+			context.lineCap = 'round';
+			context.stroke();
 			if (shape.x + shape.dx > canvas.width || shape.x + shape.dx < 0)
 				shape.dx = -shape.dx;
 			if (shape.y + shape.dy > canvas.height || shape.y + shape.dy < 0)
@@ -219,6 +254,7 @@
 		return (degrees * Math.PI)/180;
 	}
 	window.onload = init;
+	
 </script>
 </head>
 <body>
