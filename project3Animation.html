@@ -25,6 +25,9 @@
 			this.r = 10;
 			this.num = num;
 			this.color = color;
+			this.c1 = Math.floor(Math.random()*255 + 1);
+			this.c2 = Math.floor(Math.random()*255 + 1);
+			this.c3 = Math.floor(Math.random()*255 + 1);
 			this.dx = Math.random() * 30 - 15;
 			this.dy = Math.random() * 30 - 15;
 		}
@@ -38,6 +41,9 @@
 			this.height = 7;
 			this.num = num;
 			this.color = color;
+			this.c1 = Math.floor(Math.random()*255 + 1);
+			this.c2 = Math.floor(Math.random()*255 + 1);
+			this.c3 = Math.floor(Math.random()*255 + 1);
 			this.dx = Math.random() * 30 - 15;
 			this.dy = Math.random() * 30 - 15;
 		}
@@ -49,6 +55,9 @@
 			this.type = type;
 			this.num = num;
 			this.color = color;
+			this.c1 = Math.floor(Math.random()*255 + 1);
+			this.c2 = Math.floor(Math.random()*255 + 1);
+			this.c3 = Math.floor(Math.random()*255 + 1);
 			this.dx = Math.random() * 30 - 15;
 			this.dy = Math.random() * 30 - 15;
 		}
@@ -66,6 +75,9 @@
 			this.side5 = Math.floor(Math.random() * 9 - 2);
 			this.side6 = Math.floor(Math.random() * 16 + 2);
 			this.color = color;
+			this.c1 = Math.floor(Math.random()*255 + 1);
+			this.c2 = Math.floor(Math.random()*255 + 1);
+			this.c3 = Math.floor(Math.random()*255 + 1);
 			this.dx = Math.random() * 25 - 10;
 			this.dy = Math.random() * 25 - 10;
 		}
@@ -77,6 +89,23 @@
 			this.type = type;
 			this.num = num;
 			this.color = color;
+			this.c1 = Math.floor(Math.random()*255 + 1);
+			this.c2 = Math.floor(Math.random()*255 + 1);
+			this.c3 = Math.floor(Math.random()*255 + 1);
+			this.dx = Math.random() * 10 - 5;
+			this.dy = Math.random() * 10 - 5;
+		}
+		
+		else if(num == 6)
+		{
+			this.x = x;
+			this.y = y;
+			this.type = type;
+			this.num = num;
+			this.color = color;
+			this.c1 = Math.floor(Math.random()*255 + 1);
+			this.c2 = Math.floor(Math.random()*255 + 1);
+			this.c3 = Math.floor(Math.random()*255 + 1);
 			this.dx = Math.random() * 25 - 10;
 			this.dy = Math.random() * 25 - 10;
 		}
@@ -99,6 +128,11 @@
 		
 		}, false);
 		setInterval(resizeCanvas, 30);
+		/*extra something different. change the setInterval above to call handleClick instead. then on line 191 uncomment
+		the drawText(); call, and comment out the drawText(); function on line 313.
+		
+		*/
+		
 		
     }
 	
@@ -107,7 +141,7 @@
 		var colors = ["red", "green", "blue", "orange", "purple", "yellow"];
 		var type = 'xor';
 		var color = colors[Math.floor(Math.random() * colors.length)];
-		var num = Math.floor(Math.random() * 5 + 1);
+		var num = Math.floor(Math.random() * 6 + 1);
 		//var num = 5;
 		
 		shapes.push(new Shape(x, y, color, type, num));
@@ -119,15 +153,27 @@
 		
 	}
 	
+	
 	var start = 0;
+	var startShape = 0;
+	var movingUp = false;
 	
 	function drawText() {
 			
 		context.save();
 		context.font = '30px Jokerman';
 		context.translate(canvas.width/4, canvas.height/2);
-		context.rotate(0.005*start++);
-		if(start > 1256) start = 0;
+		if(movingUp == false)
+		{
+			context.rotate(0.005*start++);
+			if(start == 40) movingUp = true;
+		}
+		else if(movingUp == true)
+		{
+			context.rotate(0.005*start--);
+			if(start == -40) movingUp = false;
+		}
+		
 		context.fillText('Move the mouse to create, click to dissappear!', 0, 0);
 		context.textAlign = 'center';
 		context.textBaseLine = 'middle';
@@ -145,6 +191,8 @@
 				found = true;
 			}
 		}
+		//drawText();
+		//for version 2 uncomment the text above
 
 	}
 	function drawShape(shape) {
@@ -154,7 +202,7 @@
 			context.beginPath();
 			context.globalCompositeOperation = shape.type;
 			context.arc(shape.x, shape.y, shape.r, 0, degreesToRadians(360), true);
-			context.fillStyle = shape.color;
+			context.fillStyle = 'rgb('+shape.c1+', '+shape.c2+', '+shape.c3+')';
 			context.fill();
 			if (shape.x + shape.dx > canvas.width || shape.x + shape.dx < 0)
 				shape.dx = -shape.dx;
@@ -169,7 +217,7 @@
 			context.beginPath();
 			context.globalCompositeOperation = shape.type;
 			context.rect(shape.x, shape.y, shape.width, shape.height);
-			context.fillStyle = shape.color;
+			context.fillStyle = 'rgb('+shape.c1+', '+shape.c2+', '+shape.c3+')';
 			context.fill();
 			if (shape.x + shape.dx > canvas.width || shape.x + shape.dx < 0)
 				shape.dx = -shape.dx;
@@ -186,7 +234,7 @@
 			context.moveTo(shape.x, shape.y);
 			context.lineTo(shape.x + 5, shape.y + 10);
 			context.lineTo(shape.x - 15, shape.y + 15);
-			context.fillStyle = shape.color;
+			context.fillStyle = 'rgb('+shape.c1+', '+shape.c2+', '+shape.c3+')';
 			context.fill();
 			if (shape.x + shape.dx > canvas.width || shape.x + shape.dx < 0)
 				shape.dx = -shape.dx;
@@ -204,7 +252,7 @@
 			context.lineTo(shape.x + shape.side, shape.y + shape.side2);
 			context.lineTo(shape.x - shape.side3, shape.y + shape.side4);
 			context.lineTo(shape.x - shape.side5, shape.y + shape.side6);
-			context.fillStyle = shape.color;
+			context.fillStyle = 'rgb('+shape.c1+', '+shape.c2+', '+shape.c3+')';
 			context.fill();
 			if (shape.x + shape.dx > canvas.width || shape.x + shape.dx < 0)
 				shape.dx = -shape.dx;
@@ -220,10 +268,28 @@
 			context.globalCompositeOperation = shape.type;
 			context.moveTo(shape.x, shape.y);
 			context.bezierCurveTo(shape.x, shape.y+20, shape.x+40, shape.y+20, shape.x+40, shape.y);
-			context.strokeStyle = shape.color;
+			context.quadraticCurveTo(shape.x+20, shape.y+20, shape.x, shape.y);
+			context.fillStyle = 'rgb('+shape.c1+', '+shape.c2+', '+shape.c3+')';;
+			context.lineWidth = 5;
+			context.fill();
+			if (shape.x + shape.dx > canvas.width || shape.x + shape.dx < 0)
+				shape.dx = -shape.dx;
+			if (shape.y + shape.dy > canvas.height || shape.y + shape.dy < 0)
+				shape.dy = -shape.dy;
+			shape.x += shape.dx;
+			shape.y += shape.dy;
+		}
+		else if(shape.num == 6)
+		{
+			context.beginPath();
+			context.globalCompositeOperation = shape.type;
+			context.moveTo(shape.x, shape.y);
+			context.bezierCurveTo(shape.x, shape.y+20, shape.x+40, shape.y+20, shape.x+40, shape.y);
+			context.quadraticCurveTo(shape.x+20, shape.y+20, shape.x+30, shape.y+30);
+			context.fillStyle = 'rgb('+shape.c1+', '+shape.c2+', '+shape.c3+')';
 			context.lineWidth = 5;
 			context.lineCap = 'round';
-			context.stroke();
+			context.fill();
 			if (shape.x + shape.dx > canvas.width || shape.x + shape.dx < 0)
 				shape.dx = -shape.dx;
 			if (shape.y + shape.dy > canvas.height || shape.y + shape.dy < 0)
@@ -239,8 +305,13 @@
 		fillBackgroundColor();
 		for (var i = 0; i < shapes.length; i++) {
 			drawShape(shapes[i]);
+			if(shapes[i].x > canvas.width || shapes[i].y > canvas.height)
+			{
+				shapes.splice(i, 1);
+			}
 		}
 		drawText();
+		//for version 2 comment out the above draw text function
 		
     }
 	function fillBackgroundColor() {
